@@ -60,9 +60,26 @@ up automatically by both nix-darwin/home-manager and devenv.
 
 ## Supported systems
 
-`aarch64-darwin`, `x86_64-darwin`, `aarch64-linux`, `x86_64-linux` — exactly the
-platforms upstream ships binaries for. Every release is built on all four in CI
-before it is merged.
+`aarch64-darwin`, `aarch64-linux`, `x86_64-linux`. Every release is built on all
+three in CI before it is merged.
+
+### Intel macOS
+
+Upstream ships an `x86_64-darwin` binary and this package still knows how to
+install it, but the flake does not expose it, because **nixpkgs 26.11 dropped
+`x86_64-darwin` support entirely** — these outputs cannot even evaluate for it
+against the unstable input tracked here.
+
+If you are on an Intel Mac, use the overlay on top of a nixpkgs that still
+supports it (`nixpkgs-26.05-darwin`, security fixes until the end of 2026):
+
+```nix
+inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
+nixpkgs.overlays = [ dtctl-nix.overlays.default ];  # -> pkgs.dtctl
+```
+
+`sources.json` keeps the `x86_64-darwin` hash up to date for exactly this
+reason, and `update.sh` still repins it — it is simply not built in CI.
 
 ## How updating works
 
