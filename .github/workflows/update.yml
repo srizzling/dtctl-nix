@@ -1,0 +1,127 @@
+name: update
+
+# Repin sources.json when dynatrace-oss/dtctl publishes a release.
+#
+# The build runs *inside this workflow* rather than as a separate check on the
+# pull request, because a PR opened with GITHUB_TOKEN does not trigger further
+# workflow runs. Verifying here and merging afterwards keeps the whole thing on
+# the default token: no PAT, no branch protection, no deploy key. The PR still
+# exists as the audit trail and the revert point.
+
+on:
+  schedule:
+    # 06:00 UTC daily.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Check for a new release without opening a PR"
+        type: boolean
+        default: false
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.update.outputs.changed }}
+      version: ${{ steps.update.outputs.version }}
+      previous: ${{ steps.update.outputs.previous }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - id: update
+        run: ./update.sh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Upload repinned sources.json
+        if: steps.update.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: sources
+          path: sources.json
+          if-no-files-found: error
+
+  build:
+    needs: check
+    if: needs.check.outputs.changed == 'true'
+    name: ${{ matrix.system }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - system: x86_64-linux
+            runner: ubuntu-24.04
+          - system: aarch64-linux
+            runner: ubuntu-24.04-arm
+          - system: aarch64-darwin
+            runner: macos-15
+          - system: x86_64-darwin
+            runner: macos-15-intel
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: sources
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Verify the new pin builds and reports ${{ needs.check.outputs.version }}
+        run: nix flake check --print-build-logs
+
+  land:
+    needs: [check, build]
+    if: needs.check.outputs.changed == 'true' && !inputs.dry-run
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: sources
+
+      - name: Open and merge the bump
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.check.outputs.version }}
+          PREVIOUS: ${{ needs.check.outputs.previous }}
+        run: |
+          set -euo pipefail
+
+          branch="dtctl-$VERSION"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git switch -c "$branch"
+          git add sources.json
+          git commit -m "⬆ deps(dtctl): $PREVIOUS -> $VERSION" \
+            -m "Built and verified on aarch64-darwin, x86_64-darwin, aarch64-linux and x86_64-linux before merge." \
+            -m "https://github.com/dynatrace-oss/dtctl/releases/tag/v$VERSION"
+          git push origin "$branch"
+
+          gh pr create \
+            --title "⬆ deps(dtctl): $PREVIOUS -> $VERSION" \
+            --body "Automated repin to [dtctl v$VERSION](https://github.com/dynatrace-oss/dtctl/releases/tag/v$VERSION).
+
+          Hashes come from the release's own \`checksums.txt\`. \`nix flake check\` passed on all four supported systems before this was opened — see the \`build\` job of [this run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." \
+            --base main \
+            --head "$branch"
+
+          gh pr merge "$branch" --squash --delete-branch

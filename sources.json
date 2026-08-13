@@ -1,0 +1,21 @@
+{
+  "assets": {
+    "aarch64-darwin": {
+      "sha256": "aaf936f7b3a8e87a255e534fb75635cbede05f442eecf035a0dbbf97b685256e",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.37.0/dtctl_0.37.0_darwin_arm64.tar.gz"
+    },
+    "aarch64-linux": {
+      "sha256": "12cc7581a5598b25bcd080ee18961e1b98d93c914a41e0ba1902142cfda3e102",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.37.0/dtctl_0.37.0_linux_arm64.tar.gz"
+    },
+    "x86_64-darwin": {
+      "sha256": "57d1a84b1a8517dbd7a4956950661a8fe6bec3d5d8f2357cef4b7bc6b410ed39",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.37.0/dtctl_0.37.0_darwin_amd64.tar.gz"
+    },
+    "x86_64-linux": {
+      "sha256": "6078073bb3d8b4002d05b40d1eaf1e90aebe30a0b2e4646b97c7d35b1d9f48a8",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.37.0/dtctl_0.37.0_linux_amd64.tar.gz"
+    }
+  },
+  "version": "0.37.0"
+}

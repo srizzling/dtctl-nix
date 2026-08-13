@@ -1,0 +1,15 @@
+version: 2
+
+# Dependabot has no Nix ecosystem and cannot track upstream dtctl releases —
+# that is what .github/workflows/update.yml does. This only keeps the actions
+# used by those workflows current.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "⬆ deps(ci)"
+    groups:
+      actions:
+        patterns: ["*"]
