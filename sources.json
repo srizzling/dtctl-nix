@@ -1,21 +1,21 @@
 {
   "assets": {
     "aarch64-darwin": {
-      "sha256": "764ee3797217910c7c40125431cfad605ff05a9b6e43096a4215478fe4eb1b22",
-      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.38.0/dtctl_0.38.0_darwin_arm64.tar.gz"
+      "sha256": "4f4006677007b77a949e53a4dd357bea438d5c21eb78d33057a14a83b0a95b24",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.39.0/dtctl_0.39.0_darwin_arm64.tar.gz"
     },
     "aarch64-linux": {
-      "sha256": "793432c78130f04c4a329bc58deafb2704c702abf5ce55e57b025dfb489a899c",
-      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.38.0/dtctl_0.38.0_linux_arm64.tar.gz"
+      "sha256": "9a268b3c0ba334a402c63859c5e66427ef39c5e725199bcc66a7ec5dbc8ee699",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.39.0/dtctl_0.39.0_linux_arm64.tar.gz"
     },
     "x86_64-darwin": {
-      "sha256": "a46d7d1998ff8ff6eaa5ad66c5abd03fc154527a9a375892b06329e0a2ede449",
-      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.38.0/dtctl_0.38.0_darwin_amd64.tar.gz"
+      "sha256": "51bd5b36d03e7a924fae98d8f08ab36834399a75e90183d43aa432581fc45bf3",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.39.0/dtctl_0.39.0_darwin_amd64.tar.gz"
     },
     "x86_64-linux": {
-      "sha256": "8ac7a03d8f5badb3df158b0da8516f8c8d8c002a26a8c8fa6e6f40c5087fdb4f",
-      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.38.0/dtctl_0.38.0_linux_amd64.tar.gz"
+      "sha256": "0ae903e1bc02072c4700e3a2fd351aaa8860d48049143adffbe36cb8bc9f1400",
+      "url": "https://github.com/dynatrace-oss/dtctl/releases/download/v0.39.0/dtctl_0.39.0_linux_amd64.tar.gz"
     }
   },
-  "version": "0.38.0"
+  "version": "0.39.0"
 }
