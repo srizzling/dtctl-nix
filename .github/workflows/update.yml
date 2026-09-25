@@ -3,10 +3,14 @@ name: update
 # Repin sources.json when dynatrace-oss/dtctl publishes a release.
 #
 # The build runs *inside this workflow* rather than as a separate check on the
-# pull request, because a PR opened with GITHUB_TOKEN does not trigger further
-# workflow runs. Verifying here and merging afterwards keeps the whole thing on
+# pull request. Verifying here and merging afterwards keeps the whole thing on
 # the default token: no PAT, no branch protection, no deploy key. The PR still
 # exists as the audit trail and the revert point.
+#
+# The bump commit carries [skip ci]. The PR does trigger ci.yml, but the PR is
+# merged and its branch deleted within seconds, so that run starts after its
+# ref is gone and fails with no jobs ("workflow file issue"). Every bump from
+# 0.37.0 to 0.40.0 left one of those behind. The build job below is the check.
 
 on:
   schedule:
@@ -110,7 +114,8 @@ jobs:
           git switch -c "$branch"
           git add sources.json
           git commit -m "⬆ deps(dtctl): $PREVIOUS -> $VERSION" \
-            -m "Built and verified on aarch64-darwin, x86_64-darwin, aarch64-linux and x86_64-linux before merge." \
+            -m "Built and verified on aarch64-darwin, aarch64-linux and x86_64-linux before merge." \
+            -m "[skip ci]" \
             -m "https://github.com/dynatrace-oss/dtctl/releases/tag/v$VERSION"
           git push origin "$branch"
 
@@ -118,7 +123,7 @@ jobs:
             --title "⬆ deps(dtctl): $PREVIOUS -> $VERSION" \
             --body "Automated repin to [dtctl v$VERSION](https://github.com/dynatrace-oss/dtctl/releases/tag/v$VERSION).
 
-          Hashes come from the release's own \`checksums.txt\`. \`nix flake check\` passed on all four supported systems before this was opened — see the \`build\` job of [this run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." \
+          Hashes come from the release's own \`checksums.txt\`. \`nix flake check\` passed on aarch64-darwin, aarch64-linux and x86_64-linux before this was opened — see the \`build\` job of [this run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." \
             --base main \
             --head "$branch"
 
