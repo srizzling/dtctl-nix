@@ -1,6 +1,6 @@
 # dtctl-nix
 
-Nix packaging for [dtctl](https://github.com/dynatrace-oss/dtctl), the Dynatrace
+Nix packaging for [dtctl](https://github.com/Dynatrace/dtctl), the Dynatrace
 platform CLI.
 
 `dtctl` is not in nixpkgs. This flake packages the official release binaries and

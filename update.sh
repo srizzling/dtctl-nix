@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-readonly UPSTREAM="dynatrace-oss/dtctl"
+readonly UPSTREAM="Dynatrace/dtctl"
 
 SOURCES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/sources.json"
 readonly SOURCES
