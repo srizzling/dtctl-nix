@@ -64,9 +64,9 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       This package installs the official prebuilt release binary rather than
       building from source.
     '';
-    homepage = "https://github.com/dynatrace-oss/dtctl";
-    downloadPage = "https://github.com/dynatrace-oss/dtctl/releases";
-    changelog = "https://github.com/dynatrace-oss/dtctl/releases/tag/v${finalAttrs.version}";
+    homepage = "https://github.com/Dynatrace/dtctl";
+    downloadPage = "https://github.com/Dynatrace/dtctl/releases";
+    changelog = "https://github.com/Dynatrace/dtctl/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.asl20;
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
     mainProgram = "dtctl";
